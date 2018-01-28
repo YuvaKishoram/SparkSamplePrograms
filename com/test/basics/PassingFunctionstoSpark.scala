@@ -1,6 +1,6 @@
 package com.test.basics
 
-import org.apache.spark.{SparkConf,SparkContext}
+import org.apache.spark.{SparkConf, SparkContext}
 
 object PassingFunctionstoSpark {
   
@@ -19,16 +19,20 @@ object PassingFunctionstoSpark {
     
     val sc = new SparkContext(conf)
   	
-  	val fileData = sc.textFile(args(0))//provide the input path in arg0
-  	fileData.foreach(println)
+  	val fileData = sc.parallelize(Seq("abc","xyz"))//Please provide the input path in arg0
+  	println("Printing fileData... "+ 	fileData.collect.deep)
   	
-  	/*
-  	 * Return a new RDD by applying a function to all elements of this RDD.  
-  	 */
-  	println(fileData.map(printText).collect().deep)
-  	fileData.map(printText).foreach(println)
+/*  
+ *  	println("Printing printText... "+ fileData.map(printText).collect().deep)
+ 
+ *   	println("Printing modifyText... " +fileData.map(modifyText).collect().deep)
+ */
+	
+  	val rddUnit = fileData.map(printText)//map will Return a new RDD by applying a function to all elements of this RDD.
+  	println("Printing rddUnit... " + rddUnit.collect().deep)
   	
-  	println(fileData.map(modifyText).collect().deep)
-  	fileData.map(modifyText).foreach(println)
+  	val rddString = fileData.map(modifyText)
+  	println("Printing rddString... " + rddString.collect().deep)
+  	
   }
 }
