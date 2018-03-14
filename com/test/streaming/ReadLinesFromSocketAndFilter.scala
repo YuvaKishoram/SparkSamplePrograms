@@ -1,4 +1,4 @@
-package com.test.streams
+package com.test.streaming
 
 import org.apache.spark._
 import org.apache.spark.streaming._
@@ -13,8 +13,8 @@ object ReadLinesFromSocketAndFilter {
     // Create a StreamingContext with a 30-second batch size from a SparkConf    
     val ssc = new StreamingContext(conf, Seconds(30))
     
-    // Create a DStream using data received after connecting to port 9999 on the local machine    
-    val lines = ssc.socketTextStream("localhost", 9999)
+    // Create a DStream using data received after connecting to port 7777 on the local machine    
+    val lines = ssc.socketTextStream("localhost", 7777)
 
     lines.print
 
