@@ -75,10 +75,29 @@ object DataFrameJoinsUsingDSL {
    * employees.join(departments,employees.col("deptID")) //here we need expression
    * org.apache.spark.sql.AnalysisException: join condition '`deptID`' of type int is not a boolean.;;
   */
-  val innerJoinUsingExprs = employees.join(departments,employees.col("DeptID")===departments.col("DeptID"))
-  innerJoinUsingExprs.show //If we use expression we will get duplicated “DepartmentID” column from both dataframes
   
-  val selectRequiredColumns = employees.join(departments,employees.col("DeptID")===departments.col("DeptID")).select(employees.col("Name"),employees.col("DeptID"),departments.col("DeptName"))
+  val naiveInnerJoinUsingExprs = employees.join(departments,employees("DeptID")===departments("DeptID")).show
+  naiveInnerJoinUsingExprs.show
+  
+  naiveInnerJoinUsingExprs.printSchema
+/*
+root
+ |-- Name: string (nullable = true)
+ |-- DeptID: integer (nullable = true)
+ |-- DeptID: integer (nullable = false)
+ |-- DeptName: string (nullable = true)
+*/ 
+  naiveInnerJoinUsingExprs.select("DeptID")
+  //org.apache.spark.sql.AnalysisException: Reference 'DeptID' is ambiguous, could be: DeptID#7, DeptID#21.;
+
+  val explicitInnerJoinUsingExprs = employees.as("e1").join(departments.as("d1"),$"e1.DeptID" === $"d1.DeptID")
+  explicitInnerJoinUsingExprs.show
+  explicitInnerJoinUsingExprs.select($"e1.DeptID")
+  
+  val innerJoinUsingExprsWithCol = employees.join(departments,employees.col("DeptID")===departments.col("DeptID"))
+  innerJoinUsingExprsWithCol.show //If we use expression we will get duplicated “DepartmentID” column from both dataframes
+  
+  val selectRequiredColumns = innerJoinUsingExprsWithCol.select(employees.col("Name"),employees.col("DeptID"),departments.col("DeptName"))
   selectRequiredColumns.show
   
   //employees.join(departments,employees.col('DeptID)===departments.col('DeptID))//type mismatch; found : Symbol required: String
@@ -127,6 +146,9 @@ object DataFrameJoinsUsingDSL {
   
   val leftJoin = employees.join(departments,Seq("deptID"),"left")
   leftJoin.show
+  
+  val leftOuterJoinUsingExpr = employees.join(departments,employees("DeptID")===departments("DeptID"),"left_outer")
+  leftOuterJoinUsingExpr.show
   
   //Right Outer Join (Or) Right join
   
