@@ -7,7 +7,7 @@ import org.apache.spark.sql.SparkSession
 object CastedVotesCount {
   def main(args: Array[String]): Unit = {
     val sparkConf = new SparkConf()
-    							.setAppName("Receive Payment Kafka")
+    							.setAppName("CastedVotesCount")
     							.setMaster("local[*]")
 		
 	  val sc = new SparkContext(sparkConf)
