@@ -76,7 +76,7 @@ object DataFrameJoinsUsingDSL {
    * org.apache.spark.sql.AnalysisException: join condition '`deptID`' of type int is not a boolean.;;
   */
   
-  val naiveInnerJoinUsingExprs = employees.join(departments,employees("DeptID")===departments("DeptID")).show
+  val naiveInnerJoinUsingExprs = employees.join(departments,employees("DeptID")===departments("DeptID"))
   naiveInnerJoinUsingExprs.show
   
   naiveInnerJoinUsingExprs.printSchema
